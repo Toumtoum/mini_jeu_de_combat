@@ -22,13 +22,44 @@
       <main>
         <?php
 
+    //Chargement automatique des classes
+
         function chargerClasse($class)
         {
           require 'class/' . $class . '.php'; // On inclut la classe correspondante au paramètre passé.
         }
         spl_autoload_register('chargerClasse');
 
+
+    // Connection BDD
+
+        function connectBdd () {
+          try{
+            $bdd = new PDO('mysql:host=localhost;dbname=moreauConst;charset=utf8', 'root' , 'qX7-xM4-z6z-vPb',array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+          }
+          catch (Exception $e)
+          {
+          die ('Erreur : ' .$e->getMessage());
+          }
+          return $bdd;
+          }
+
+    // Création d'une instance personnageManager
+
+    $db = connectbdd();
+
+    $manager = neweprsonnageManager($db);
+
         ?>
+          <div>
+            <form action="" method="post">
+              <p>
+                Nom : <input type="text" name="nom" maxlength="50" />
+                <input type="submit" value="Créer ce personnage" name="creer" />
+                <input type="submit" value="Utiliser ce personnage" name="utiliser" />
+              </p>
+            </form>
+          </div>
 
 
       </main>

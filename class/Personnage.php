@@ -23,6 +23,14 @@ class Personnage {
     }
   }
 
+// GETTERS
+
+  public function getId(){
+
+    return $this->_id;
+
+  }
+
   public function getNom(){
 
     return $this->_nom;
@@ -35,7 +43,35 @@ class Personnage {
 
   }
 
-  public function setDegats(){
+// SETTERS
+
+  public function setId($id){
+
+  if (is_int($id)){
+    $this->_id = $id;
+  }
+
+}
+
+  public function setNom($nom){
+
+  if (is_string($nom)){
+    $this->_nom = $nom;
+  }
+
+}
+
+  public function setDegats($degats){
+
+  if (is_int($degats)){
+    $this->_degats = $degats;
+  }
+
+}
+
+// Méthodes
+
+  public function encaisserDegats(){
 
     $this->_degats += 5;
 
@@ -53,12 +89,6 @@ class Personnage {
 
   }
 
-  public function setNom($nom){
-
-    $this->_nom = $nom;
-
-  }
-
   public function frapper(Personnage $Perso){
 
     if ($Perso == $this->_nom){
@@ -68,7 +98,7 @@ class Personnage {
     }
     else {
 
-    $Perso->setDegats();
+    $Perso->encaisserDegats();
 
     }
 

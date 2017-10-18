@@ -77,28 +77,28 @@ class Personnage {
 
     if ($this->_degats >= 100){
 
-      echo $this->_nom 'n\'est plus des notres';
+      echo $this->_nom . 'n\'est plus des notres';
 
     }
 
     else{
 
-      echo $this->_nom 'vient d\'être frappé';
+      echo $this->_nom . 'vient d\'être frappé';
 
     }
 
   }
 
-  public function frapper(Personnage $Perso){
+  public function frapper(Personnage $perso){
 
-    if ($Perso == $this->_nom){
+    if ($perso == $this->_nom){
 
       echo 'TU NE PEUX PAS TE FRAPPER TOI MÊME!!!!!!!!!!!!!!';
 
     }
     else {
 
-    $Perso->encaisserDegats();
+    $perso->encaisserDegats();
 
     }
 

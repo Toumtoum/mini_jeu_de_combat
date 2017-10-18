@@ -35,7 +35,7 @@
 
         function connectBdd () {
           try{
-            $bdd = new PDO('mysql:host=localhost;dbname=moreauConst;charset=utf8', 'root' , 'qX7-xM4-z6z-vPb',array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+            $bdd = new PDO('mysql:host=localhost;dbname=test;charset=utf8', 'root' , 'qX7-xM4-z6z-vPb',array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
           }
           catch (Exception $e)
           {
@@ -48,9 +48,48 @@
 
     $db = connectbdd();
 
-    $manager = neweprsonnageManager($db);
+    $manager = new personnageManager($db);
 
-        ?>
+    // Créer un personnage si il n'existe pas déja et l'insérer en base de données.
+
+    if (isset($_POST['creer']) && isset($_POST['nom']) && !empty(['nom'])){
+      $data = ["nom" => $_POST["nom"]];
+      $perso = new Personnage($data);
+
+      if ($manager -> exists($_POST['nom'])){
+        echo 'Ce personnage existe déjà';
+    }
+    else {
+      $manager -> addPersonnage($perso);
+    }
+    }
+
+    ?>
+    <table class="striped">
+      <thead>
+        <tr>
+          <th>PERSONNAGE</th>
+          <th>DEGATS</th>
+        </tr>
+      </thead>
+      <tbody>
+      <?php
+      if ($manager -> getAll()){
+      $donnees = $manager -> getAll();
+
+      foreach ($donnees as $value) {?>
+        <tr>
+            <td><? echo $value['nom'];?></td>
+            <td><? echo $value['degats'];?></td>
+        </tr>
+        <?php
+        }
+        }?>
+        </tbody>
+      </table>
+
+          </div>
+
           <div>
             <form action="" method="post">
               <p>

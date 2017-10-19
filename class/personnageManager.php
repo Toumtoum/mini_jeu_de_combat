@@ -19,11 +19,11 @@ class personnageManager{
 
   public function deletePersonnage(Personnage $perso){
     $req = $this->_db -> prepare('DELETE FROM personnages WHERE id = :id');
-    $req -> execute(['id' => $perso -> setId()]);
+    $req -> execute(['id' => $perso -> getId()]);
   }
 
   public function updatePersonnage(Personnage $perso){
-    $req = $this->_db -> preapre('UPDATE personnages SET degats = :degats WHERE id = :id');
+    $req = $this->_db -> prepare('UPDATE personnages SET degats = :degats WHERE id = :id');
     $req -> execute(['degats' => $perso->getDegats(),
                     'id' => $perso->getId()]);
   }
@@ -33,8 +33,10 @@ class personnageManager{
 
     $req = $this->_db->query('SELECT * FROM personnages');
     $donnees = $req->fetchAll();
-
-    return $donnees;
+    foreach ($donnees as $key => $value){
+      $array[] = new Personnage($value);
+    }
+    return $array;
   }
 
   public function get($id)
@@ -42,9 +44,9 @@ class personnageManager{
     $id = (int) $id;
 
     $req = $this->_db->query('SELECT * FROM personnages WHERE id = '.$id);
-    $donnees = $req->fetchAll();
+    $donnees = $req->fetch();
 
-    return $donnees;
+    return new Personnage($donnees);
   }
 
   function exists($nom){

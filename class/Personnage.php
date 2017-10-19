@@ -47,7 +47,7 @@ class Personnage {
 
   public function setId($id){
 
-  if (is_int($id)){
+  if (is_int((int)$id)){
     $this->_id = $id;
   }
 
@@ -62,8 +62,8 @@ class Personnage {
 }
 
   public function setDegats($degats){
-
-  if (is_int($degats)){
+  //
+  if (is_int((int)$degats)){
     $this->_degats = $degats;
   }
 
@@ -73,17 +73,17 @@ class Personnage {
 
   public function encaisserDegats(){
 
-    $this->_degats += 5;
+    $this->_degats += 10;
 
     if ($this->_degats >= 100){
 
-      echo $this->_nom . 'n\'est plus des notres';
+      echo $this->_nom . ' n\'est plus des notres';
 
     }
 
     else{
 
-      echo $this->_nom . 'vient d\'être frappé';
+      echo $this->_nom . ' vient d\'être frappé';
 
     }
 
@@ -91,7 +91,9 @@ class Personnage {
 
   public function frapper(Personnage $perso){
 
-    if ($perso == $this->_nom){
+    $verif = $perso->getNom();
+
+    if ($verif == $this->_nom){
 
       echo 'TU NE PEUX PAS TE FRAPPER TOI MÊME!!!!!!!!!!!!!!';
 

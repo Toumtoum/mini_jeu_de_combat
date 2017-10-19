@@ -1,3 +1,62 @@
+<?php
+
+function chargerClasse($class)
+{
+  require 'class/' . $class . '.php'; // On inclut la classe correspondante au paramètre passé.
+}
+spl_autoload_register('chargerClasse');
+
+function connectBdd () {
+  try{
+    $bdd = new PDO('mysql:host=localhost;dbname=test;charset=utf8', 'root' , 'qX7-xM4-z6z-vPb',array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+  }
+  catch (Exception $e)
+  {
+  die ('Erreur : ' .$e->getMessage());
+  }
+  return $bdd;
+  }
+
+  //Chargement automatique des classes
+
+  // Connection BDD
+
+  // Création d'une instance personnageManager
+
+  $db = connectbdd();
+
+  $manager = new personnageManager($db);
+
+  // Créer un personnage si il n'existe pas déja et l'insérer en base de données.
+
+  if (isset($_POST['creer']) && isset($_POST['nom']) && !empty(['nom'])){
+    $data = ["nom" => $_POST["nom"]];
+    $perso = new Personnage($data);
+
+    if ($manager -> exists($_POST['nom'])){
+      echo 'Ce personnage existe déjà';
+  }
+  else {
+    $manager -> addPersonnage($perso);
+  }
+  }
+
+
+
+  if (isset($_POST['attaquant']) && isset($_POST['attaque']) && isset($_POST['attaquer'])){
+    $persoAttaquant = $manager->get($_POST['attaquant']);
+    $perso = $manager->get($_POST['attaque']);
+    $persoAttaquant->frapper($perso);
+    if ($perso->getDegats() >= 100){
+      $manager->deletePersonnage($perso);
+    }
+    else {
+    $manager->updatePersonnage($perso);
+  }
+  // header("Location: index.php");
+
+  }
+ ?>
 <!doctype html>
 <html class="no-js" lang="">
     <head>
@@ -20,51 +79,6 @@
     <body>
 
       <main>
-        <?php
-
-    //Chargement automatique des classes
-
-        function chargerClasse($class)
-        {
-          require 'class/' . $class . '.php'; // On inclut la classe correspondante au paramètre passé.
-        }
-        spl_autoload_register('chargerClasse');
-
-
-    // Connection BDD
-
-        function connectBdd () {
-          try{
-            $bdd = new PDO('mysql:host=localhost;dbname=test;charset=utf8', 'root' , 'qX7-xM4-z6z-vPb',array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
-          }
-          catch (Exception $e)
-          {
-          die ('Erreur : ' .$e->getMessage());
-          }
-          return $bdd;
-          }
-
-    // Création d'une instance personnageManager
-
-    $db = connectbdd();
-
-    $manager = new personnageManager($db);
-
-    // Créer un personnage si il n'existe pas déja et l'insérer en base de données.
-
-    if (isset($_POST['creer']) && isset($_POST['nom']) && !empty(['nom'])){
-      $data = ["nom" => $_POST["nom"]];
-      $perso = new Personnage($data);
-
-      if ($manager -> exists($_POST['nom'])){
-        echo 'Ce personnage existe déjà';
-    }
-    else {
-      $manager -> addPersonnage($perso);
-    }
-    }
-
-    ?>
     <table class="striped">
       <thead>
         <tr>
@@ -79,8 +93,8 @@
 
       foreach ($donnees as $value) {?>
         <tr>
-            <td><? echo $value['nom'];?></td>
-            <td><? echo $value['degats'];?></td>
+            <td><? echo $value->getNom();?></td>
+            <td><? echo $value->getDegats();?></td>
         </tr>
         <?php
         }
@@ -95,8 +109,33 @@
               <p>
                 Nom : <input type="text" name="nom" maxlength="50" />
                 <input type="submit" value="Créer ce personnage" name="creer" />
-                <input type="submit" value="Utiliser ce personnage" name="utiliser" />
               </p>
+            </form>
+          </div>
+
+
+
+          <div class="jouer">
+            <form action="" method="post">
+              <label for="attaquant">PERSONNAGE ATTAQUANT</label>
+              <select id="attaquant" name="attaquant" class="form-control">
+              <!-- <option value="" disabled selected>Choix du personnage qui attaque</option> -->
+              <?php
+              foreach ($donnees as $value) {?>
+                <option value=<? echo $value->getId();?>><? echo $value->getNom();?></option>
+              <?php
+              }?>
+              </select>
+              <label for="attaque">PERSONNAGE ATTAQUÉ</label>
+              <select id="attaque" name="attaque" class="form-control">
+              <!-- <option value="" disabled selected>Choix du personnage attaqué</option> -->
+              <?php
+              foreach ($donnees as $value) {?>
+                <option value=<? echo $value->getId();?>><? echo $value->getNom();?></option>
+              <?php
+              }?>
+              </select>
+              <input type="submit" value="ATTAQUER" name="attaquer" />
             </form>
           </div>
 

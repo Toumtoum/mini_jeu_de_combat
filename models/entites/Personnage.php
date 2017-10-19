@@ -93,7 +93,7 @@ class Personnage {
 
     $verif = $perso->getNom();
 
-    if ($verif == $this->_nom){
+    if (($perso->getNom()) == $this->_nom){
 
       echo 'TU NE PEUX PAS TE FRAPPER TOI MÊME!!!!!!!!!!!!!!';
 

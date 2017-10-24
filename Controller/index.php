@@ -1,12 +1,14 @@
 <?php
 
-function chargerClasse($class)
-{
-    require '../models/' . $class . '.php';
-  require '../models/entites/' . $class . '.php'; // On inclut la classe correspondante au paramètre passé.
+// function chargerClasse($class)
+// {
+//   require '../models/' . $class . '.php';
+//   require '../models/entites/' . $class . '.php'; // On inclut la classe correspondante au paramètre passé.
+// }
+// spl_autoload_register('chargerClasse');
 
-}
-spl_autoload_register('chargerClasse');
+require '../models/personnageManager.php';
+require '../models/entites/Personnage.php';
 
 // DB CONNECTION
 
